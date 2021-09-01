@@ -16,7 +16,7 @@ export class memoprogram {
 // constructor();//constructor ??
    public static async   wriiteutf8(params:PublicKey, memo:string ) {
 
-    const programid= new PublicKey("Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo");
+    const programid= new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
 
 
    const keys =[{

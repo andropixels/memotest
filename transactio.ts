@@ -2,6 +2,12 @@ import * as web3 from "@solana/web3.js";
 import * as splToken from "@solana/spl-token";
 import { newAccountWithLamports } from "./lamport";
 import { memoprogram } from "./memo";
+const CryptoJS = require("crypto-js");
+
+// var encryptedAES = CryptoJS.AES.encrypt(data, "Pratik Saria");
+// console.log(typeof encryptedAES);
+// var decryptedBytes = CryptoJS.AES.decrypt(encryptedAES, "Pratik Saria");
+// var plaintext = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
 
 // Address: 9vpsmXhZYMpvhCKiVoX5U8b1iKpfwJaFpPEEXF7hRm9N
@@ -19,7 +25,8 @@ const DEMO_WALLET_SECRET_KEY = new Uint8Array([
 // Connect to cluster
 var connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 // Construct wallet keypairs
-var fromWallet = web3.Keypair.fromSecretKey(DEMO_WALLET_SECRET_KEY);
+// var fromWallet = web3.Keypair.fromSecretKey(DEMO_WALLET_SECRET_KEY);
+var newsigner = await newAccountWithLamports(connection,1000000000)
 var acc= await newAccountWithLamports(connection, 1000000000);
 var toWallet = web3.Keypair.generate();
 // Construct my token class
@@ -32,7 +39,7 @@ var myToken = new splToken.Token(
 );
 // Create associated token accounts for my token if they don't exist yet
 var fromTokenAccount = await myToken.getOrCreateAssociatedAccountInfo(
-  fromWallet.publicKey
+  newsigner.publicKey
 )
 var toTokenAccount = await myToken.getOrCreateAssociatedAccountInfo(
   toWallet.publicKey
@@ -46,26 +53,48 @@ var transaction = new web3.Transaction()
       splToken.TOKEN_PROGRAM_ID,
       fromTokenAccount.address,
       toTokenAccount.address,
-      fromWallet.publicKey,
+      newsigner.publicKey,
       [],
       0
     )
   );
 
-      transaction.add(await memoprogram.wriiteutf8(fromWallet.publicKey, "hello "));
-       console.log(`memo added  ${fromWallet.publicKey}`);
+   var encryptedAES = CryptoJS.AES.encrypt("Hello World", "Pratik Saria");
+      transaction.add(await memoprogram.wriiteutf8(newsigner.publicKey,encryptedAES.toString()));
+       console.log(`memo added  ${newsigner.publicKey}`);
 // Sign transaction, broadcast, and confirm
 var signature = await web3.sendAndConfirmTransaction(
   connection,
   transaction,
-  [fromWallet]
+  [newsigner]
 );
-console.log("SIGNATURE", signature);
+console.log("SIGNATURE",signature);
+return signature;
 console.log("SUCCESS");
-   }
+}
 
   
   // Add instruction to write memo
 // transaction.addInstruction(
 //   MemoProgram.writeUtf8(feePayer.getPublicKey(),"Hello from SolanaJ :)")
 // );
+
+
+export async function RetriveMemo (sig:any) {
+  var connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+  const res =await connection.getTransaction(sig);
+  console.log("RES",res);
+  // @ts-ignore: Object is possibly 'null'
+  console.log(res.meta.logMessages[6])
+
+  // var decryptedBytes = CryptoJS.AES.decrypt(encryptedAES, "Pratik Saria");
+// var plaintext = decryptedBytes.toString(CryptoJS.enc.Utf8);
+}
+
+export async function TokenAccount (address:String) {
+  var connection = new web3.Connection(web3.clusterApiUrl('devnet'))
+  const key = new web3.PublicKey('498YdCwnQ9EPSQ76JEADbMEcAvczg2Bye382XfjP2SfM')
+  const pubaddress = new web3.PublicKey(address)
+  const res = await connection.getTokenAccountsByOwner(pubaddress,{mint:key})
+  console.log("TOKENACCOUNT",res);
+}
