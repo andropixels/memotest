@@ -10,7 +10,7 @@ import {
 
 }from './index'
 
- import { transfer,RetriveMemo,TokenAccount  } from './transactio';
+ import { transfer,RetriveMemo,TokenAccount,Test_Name_Service,generate_keypair  } from './transactio';
 
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from '@solana/web3.js'
 
@@ -21,7 +21,9 @@ async function main (){
   // const sig = await transfer()
   // RetriveMemo(sig)
 
-  TokenAccount('EbeourjESYjSB89KchMV3gozfgBBAyxKd1Zt5nkCwbJJ')
+  // TokenAccount('EbeourjESYjSB89KchMV3gozfgBBAyxKd1Zt5nkCwbJJ')
+  // Test_Name_Service();
+  generate_keypair()
  
 }
 

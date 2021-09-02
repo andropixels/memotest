@@ -1,8 +1,14 @@
 import * as web3 from "@solana/web3.js";
 import * as splToken from "@solana/spl-token";
+import {createNameRegistry,signAndSendTransactionInstructions} from "@solana/spl-name-service"
 import { newAccountWithLamports } from "./lamport";
+import * as bip39 from "bip39"
+import macl from "tweetnacl"
 import { memoprogram } from "./memo";
 const CryptoJS = require("crypto-js");
+
+const {AccountLayout,} = splToken
+const {sendAndConfirmTransaction} = web3;
 
 // var encryptedAES = CryptoJS.AES.encrypt(data, "Pratik Saria");
 // console.log(typeof encryptedAES);
@@ -98,3 +104,41 @@ export async function TokenAccount (address:String) {
   const res = await connection.getTokenAccountsByOwner(pubaddress,{mint:key})
   console.log("TOKENACCOUNT",res);
 }
+
+
+export async function Test_Name_Service(){
+  const connection = new web3.Connection(web3.clusterApiUrl('devnet'))
+  const keypair = new web3.Keypair()
+  const address = keypair.publicKey;
+  console.log("ADDRESS",address.toString());
+  const secret = keypair.secretKey;
+  const hashID = await connection.requestAirdrop(address, web3.LAMPORTS_PER_SOL)
+    await connection.confirmTransaction(hashID);
+  const payerKey = new web3.PublicKey('EbeourjESYjSB89KchMV3gozfgBBAyxKd1Zt5nkCwbJJ')
+  const tx =await createNameRegistry(connection,"polkamusic",0,address,address)
+  const signers = [
+    {
+      publicKey: address,
+      secretKey:secret
+    }
+  ];
+
+  const transact = new web3.Transaction().add(tx)
+  console.log("Transaction",transact);
+  const hash = await web3.sendAndConfirmTransaction(connection,
+    transact,signers)
+}
+
+
+export function generate_keypair()
+{
+  const bStr = "PratikSaria123453256325145325633"
+  var buf = Buffer.from(bStr, 'utf-8');
+  console.log(buf.length);
+  const keyPair = web3.Keypair.fromSeed(buf);
+  console.log(keyPair.publicKey);
+  console.log(keyPair.secretKey)
+  console.log(buf);
+}
+
+
