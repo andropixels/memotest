@@ -10,7 +10,11 @@ import {
 
 }from './index'
 
+<<<<<<< HEAD
  import { transfer,RetriveMemo,TokenAccount, check  } from './transactio';
+=======
+ import { transfer,RetriveMemo,TokenAccount,Test_Name_Service,generate_keypair  } from './transactio';
+>>>>>>> 1d77a5dff4a96ed42dde7da0778fa62118285b82
 
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram } from '@solana/web3.js'
 import { tokenTransfer } from './tokentransfer';
@@ -25,6 +29,7 @@ async function main (){
   // RetriveMemo(sig)
       // await transfer()
 
+<<<<<<< HEAD
       // await tokenTransfer()
       // var txnsign = await transfer();
       // await RetriveMemo(txnsign);
@@ -44,6 +49,11 @@ async function main (){
   const currentOwner = new web3.PublicKey("8UKKq7ocdAqcxb8xkCQt936riNogVgQckFk7Xii4pY6a");
   //  await transfeOwnerr(child,ROOT_PARENT,newOwner,currentOwner);
   // TokenAccount('8QqnVgc78vFCd5cLXA5eJnKwyTKb6QhHQSZEqZt3CYZn')
+=======
+  // TokenAccount('EbeourjESYjSB89KchMV3gozfgBBAyxKd1Zt5nkCwbJJ')
+  // Test_Name_Service();
+  generate_keypair()
+>>>>>>> 1d77a5dff4a96ed42dde7da0778fa62118285b82
  
 }
 
